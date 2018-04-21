@@ -5,6 +5,8 @@ import tkinter.messagebox
 
 species_list = []
 species_names = []
+adding_placeholders = []
+testing_changes = []
 
 
 class MyGUI:
