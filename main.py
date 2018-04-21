@@ -4,6 +4,7 @@ import tkinter.messagebox
 #import sqlite3
 
 species_list = []
+species_names = []
 
 
 class MyGUI:
