@@ -1,9 +1,15 @@
 import tkinter
 import tkinter.messagebox
-
-#import sqlite3
+from database import *
+import sqlite3
 
 species_list = []
+
+    # Testing SQLite, instantiate SQLite class named x #
+x = MarineDatabase()
+x.create_table_locations()
+#name = input("Location Name")
+#x.execute_location(name)
 
 
 class MyGUI:
