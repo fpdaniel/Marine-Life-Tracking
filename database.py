@@ -7,7 +7,7 @@ class MarineDatabase:
     locale = "testing.db"
 
     def __init__(self):
-        """Initialize class variables and creates connection to db """
+        """Initialize instance variables and creates connection to the database."""
         self.conn = sqlite3.connect(MarineDatabase.locale)
         self.curr = self.conn.cursor()
 
@@ -31,8 +31,25 @@ class MarineDatabase:
                             )''')
         self.conn.commit()
 
-    def execute_location(self, location_name):
-        self.curr.execute("INSERT INTO locations VALUES (?)", (location_name,))
+    def add_location(self, location_name):
+        """Add a location to the database.
+
+        Args:
+            location_name (str): The location name.
+        """
+        self.curr.execute("INSERT INTO locations (name) VALUES (?)",
+                          (location_name,))
+        self.conn.commit()
+
+    def add_animal(self, animal_name):
+        """Add an animal to the database.
+
+        Args:
+            animal_name (str): The name of the animal.
+        """
+        self.curr.execute("INSERT INTO animals (name) VALUES (?)",
+                          (animal_name,))
+        self.conn.commit()
 
     def commit(self):
         self.conn.commit()
