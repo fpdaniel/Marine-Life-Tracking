@@ -19,7 +19,8 @@ class MarineDatabase:
                             )''')
         self.curr.execute('''CREATE TABLE IF NOT EXISTS animals (
                             id INTEGER PRIMARY KEY,
-                            name TEXT NOT NULL
+                            name TEXT NOT NULL,
+                            location_id INTEGER NOT NULL
                             )''')
         self.curr.execute('''CREATE TABLE IF NOT EXISTS observations (
                             id INTEGER PRIMARY KEY,
@@ -41,14 +42,17 @@ class MarineDatabase:
                           (location_name,))
         self.conn.commit()
 
-    def add_animal(self, animal_name):
-        """Add an animal to the database.
+    def add_animal(self, animal_name, location_name):
+        """Add an animal from a given location to the database.
 
         Args:
             animal_name (str): The name of the animal.
+            location_name (str): The location where the animal was seen.
         """
-        self.curr.execute("INSERT INTO animals (name) VALUES (?)",
-                          (animal_name,))
+        self.curr.execute('''INSERT INTO animals (name, location_id) VALUES (
+                            ?, (SELECT locations.id FROM locations
+                            WHERE locations.name = ?))''', (animal_name,
+                                                            location_name))
         self.conn.commit()
 
     def commit(self):
