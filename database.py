@@ -60,6 +60,17 @@ class MarineDatabase:
         names = [x[0] for x in self.curr.execute("SELECT name FROM locations")]
         return names
 
+    def get_animals_from(self, location):
+        """Return a list of the animals associated with a given location.
+
+        Args:
+            location (str): The location name for the desired list of animals.
+        """
+        names = [x[0] for x in self.curr.execute('''SELECT name FROM animals
+                WHERE location_id = (SELECT locations.id FROM locations WHERE
+                locations.name = ?)''', (location,))]
+        return names
+
     def commit(self):
         self.conn.commit()
 
