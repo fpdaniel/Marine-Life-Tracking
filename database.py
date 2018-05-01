@@ -25,7 +25,7 @@ class MarineDatabase:
         self.curr.execute('''CREATE TABLE IF NOT EXISTS observations (
                             id INTEGER PRIMARY KEY,
                             date TEXT NOT NULL,
-                            temperature INTEGER NOT NULL,
+                            temperature FLOAT NOT NULL,
                             location_id INTEGER NOT NULL,
                             animal_id INTEGER NOT NULL,
                             amount INTEGER
@@ -70,6 +70,26 @@ class MarineDatabase:
                 WHERE location_id = (SELECT locations.id FROM locations WHERE
                 locations.name = ?)''', (location,))]
         return names
+
+    def add_observation(self, date, location, animal, amount, temperature):
+        """Add a single observation to the database.
+
+        Args:
+            date (str): The date of the observation.
+            location (str): The location where the observation took place.
+            animal (str): The animal name associated with the observation.
+            amount (int): The quantity of the animal that was seen.
+            temperature (float): The temperature of the water at the time.
+        """
+        self.curr.execute("""
+            INSERT INTO observations (
+            date, temperature, location_id, animal_id, amount)
+            VALUES (?, ?, (SELECT id FROM locations WHERE name = ?),
+            (SELECT id FROM animals WHERE name = ?
+            AND location_id = (SELECT id FROM locations WHERE name = ?)), ?)
+            """, (date, temperature, location, animal, location, amount))
+
+        self.conn.commit()
 
     def commit(self):
         self.conn.commit()
