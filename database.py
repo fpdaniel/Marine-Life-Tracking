@@ -91,6 +91,33 @@ class MarineDatabase:
 
         self.conn.commit()
 
+    def get_observations(self, animal, location):
+        """Return observations for a given animal and location.
+
+        Args:
+            animal (str): The animal name.
+            location (str): The location name.
+        Returns:
+            A tuple of 3 lists:
+            The first list contains date strings.
+            The second list contains corresponding population sizes.
+            The third list contains corresponding temperatures.
+        """
+        self.curr.execute("""
+            SELECT date, amount, temperature
+            FROM observations, locations, animals
+            WHERE observations.location_id = locations.id
+            AND observations.animal_id = animals.id
+            AND locations.name = ?
+            AND animals.name = ?
+            ORDER BY date ASC
+            """, (location, animal))
+        
+        rows = self.curr.fetchall()
+        return ([x[0] for x in rows],
+                [x[1] for x in rows],
+                [x[2] for x in rows])
+
     def commit(self):
         self.conn.commit()
 
