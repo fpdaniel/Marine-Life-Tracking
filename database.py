@@ -55,6 +55,11 @@ class MarineDatabase:
                                                             location_name))
         self.conn.commit()
 
+    def get_locations(self):
+        """Return a list of all of the location names."""
+        names = [x[0] for x in self.curr.execute("SELECT name FROM locations")]
+        return names
+
     def commit(self):
         self.conn.commit()
 
