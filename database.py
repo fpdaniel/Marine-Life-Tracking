@@ -139,6 +139,22 @@ class MarineDatabase:
             """, (animal, location))
         self.conn.commit()
 
+    def delete_location(self, curr_location):
+            self.curr.execute("""
+                DELETE FROM observations
+                WHERE observations.location.id = ?
+                """, (curr_location,))
+
+            self.curr.execute("""
+                DELETE FROM animals
+                WHERE animals.location.id = ?
+                """, (curr_location,))
+
+            self.curr.execute("""
+                DELETE FROM locations
+                WHERE locations.id = ?
+                """, (curr_location,))
+
     def commit(self):
         self.conn.commit()
 
