@@ -118,25 +118,29 @@ class MarineDatabase:
                 [x[1] for x in rows],
                 [x[2] for x in rows])
 
-    def commit(self):
+    def delete_animal(self, animal, location):
+        """Delete an animal given a location.
+
+        Args:
+            animal (str): The animal name to delete.
+            location (str): The location of the animal.
+        """
+        self.curr.execute("""
+            DELETE FROM observations
+            WHERE observations.animal_id
+                = (SELECT id FROM animals WHERE name = ?)
+            AND observations.location_id
+                = (SELECT id FROM locations WHERE name = ?)
+            """, (animal, location))
+        self.curr.execute("""
+            DELETE FROM animals
+            WHERE name = ?
+            AND location_id = (SELECT id FROM locations WHERE name = ?)
+            """, (animal, location))
         self.conn.commit()
 
-    def delete_location(self, curr_location):
-
-            self.curr.execute("""
-            DELETE FROM observations
-            WHERE observations.location.id = ?
-            """, (curr_location,))
-
-            self.curr.execute("""
-            DELETE FROM animals
-            WHERE animals.location.id = ?
-            """, (curr_location,))
-
-            self.curr.execute("""
-            DELETE FROM locations
-            WHERE locations.id = ?
-            """, (curr_location,))
+    def commit(self):
+        self.conn.commit()
 
     def close(self):
         self.curr.close()
