@@ -139,21 +139,34 @@ class MarineDatabase:
             """, (animal, location))
         self.conn.commit()
 
-    def delete_location(self, curr_location):
-            self.curr.execute("""
-                DELETE FROM observations
-                WHERE observations.location.id = ?
-                """, (curr_location,))
+    def delete_location(self, location):
+        """Delete a given location.
 
-            self.curr.execute("""
-                DELETE FROM animals
-                WHERE animals.location.id = ?
-                """, (curr_location,))
+        Args:
+            location (str): The name of the location to delete.
+        """
+        self.curr.execute("""
+            SELECT id FROM locations WHERE name = ?
+            """, (location,))
 
-            self.curr.execute("""
-                DELETE FROM locations
-                WHERE locations.id = ?
-                """, (curr_location,))
+        location_id = (self.curr.fetchone())[0]
+
+        self.curr.execute("""
+            DELETE FROM observations
+            WHERE observations.location.id = ?
+            """, (location_id,))
+
+        self.curr.execute("""
+            DELETE FROM animals
+            WHERE animals.location.id = ?
+            """, (location_id,))
+
+        self.curr.execute("""
+            DELETE FROM locations
+            WHERE locations.id = ?
+            """, (location_id,))
+
+        self.conn.commit()
 
     def commit(self):
         self.conn.commit()
