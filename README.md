@@ -10,4 +10,3 @@ The libraries/modules used in this program are:
 - matplotlib
 - sqlite3
 - tkinter
-- python3.6-dev
