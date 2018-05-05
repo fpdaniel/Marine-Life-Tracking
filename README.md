@@ -4,7 +4,10 @@ This application's purpose is to keep track of animals seen in different marine 
 
 We were supposed to use open source software and libraries to develop our application, and so we did.
 
+This application was written using Python 3.6.
+
 The libraries/modules used in this program are:
 - matplotlib
 - sqlite3
 - tkinter
+- python3.6-dev
