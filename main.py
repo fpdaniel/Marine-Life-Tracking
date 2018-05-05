@@ -249,20 +249,16 @@ class MyGUI:
             species_name = self.species_name_entry.get()
 
         self.speciesList.insert("end", species_name)
-
-        species_list.append(species_name)
+        db.add_animal(species_name, self.current_location)
 
         num_name = len(species_name)
 
         self.species_name_entry.delete(0, num_name)
 
     def delete_species_name(self):
-        items = self.speciesList.curselection()
-        pos = 0
-        for i in items:
-            idx = int(i) - pos
-            self.speciesList.delete(idx, idx)
-            pos = pos + 1
+        index = self.speciesList.curselection()
+        db.delete_animal(self.speciesList.get(index[0]), self.current_location)
+        self.speciesList.delete(index[0])
 
     def adding_species_data(self):
         self.root_add_species_data = tkinter.Tk()
