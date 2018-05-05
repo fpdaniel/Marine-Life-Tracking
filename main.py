@@ -33,16 +33,23 @@ class MyGUI:
 
         # Right Side - Buttons
         self.useLocations = tkinter.LabelFrame(self.main_window, text=" Add/Delete/Select ")
-        self.useLocations.grid(row=0, column=15, columnspan=15, sticky='NE', rowspan=10, padx=5, pady=5,
-                               ipadx=10, ipady=80)
+        self.useLocations.grid(row=0, column=15, columnspan=15, sticky='NW', rowspan=3, padx=5, pady=5,
+                               ipadx=10, ipady=40)
 
         self.add_location_btn = tkinter.Button(self.useLocations, text="Add Location",
                                                command=self.add_location)
-        self.add_location_btn.grid(row=2, column=5, sticky='W', padx=5, pady=2)
+        self.add_location_btn.grid(row=2, column=0, sticky='W', padx=5, pady=2)
 
         self.delete_location_btn = tkinter.Button(self.useLocations, text="Delete Location",
                                                   command=self.delete_location)
-        self.delete_location_btn.grid(row=4, column=5, padx=5, pady=2)
+        self.delete_location_btn.grid(row=4, column=0, padx=5, pady=2)
+
+        self.instruction = tkinter.LabelFrame(self.main_window, text="Instructions")
+        self.instruction.grid(row=5, column=15, columnspan=15, sticky='NE', rowspan=3, padx=5, pady=5,
+                               ipadx=8, ipady=40)
+
+        self.location_instruction = tkinter.Label(self.instruction, text="Double click on location to open new window.")
+        self.location_instruction.grid(row=6, column=0, padx=5, pady=2)
 
         self.locationList.bind('<Double-1>', self.get_location)
 
@@ -69,32 +76,26 @@ class MyGUI:
         self.root_add_location.wm_title("Add Location")
 
         # Create frames
-        self.top_frame = tkinter.Frame(self.root_add_location)
-        self.mid_frame = tkinter.Frame(self.root_add_location)
-        self.bottom_frame = tkinter.Frame(self.root_add_location)
+        self.instruction_add_location = tkinter.LabelFrame(self.root_add_location, text="Adding Location")
+        self.instruction_add_location.grid(row=0, columnspan=20, sticky='NW',
+                                           rowspan=10, padx=5, pady=5, ipadx=10, ipady=4)
 
         # Create Label for Species Name
-        self.label_name = tkinter.Label(self.top_frame, text='Enter Location Name: ')
-        self.location_name_entry = tkinter.Entry(self.top_frame, width=15)
+        self.label_name = tkinter.Label(self.instruction_add_location, text='Enter Location Name: ')
+        self.label_name.grid(row=0, column=0)
 
-        # Create pack and side for Label name
-        self.label_name.pack(side='left')
-        self.location_name_entry.pack(side='left')
+        self.location_name_entry = tkinter.Entry(self.instruction_add_location, width=20)
+        self.location_name_entry.grid(row=0, column=2, sticky='W')
 
         # Create button widgets for bottom frame
-        self.add_location_button = tkinter.Button(self.bottom_frame, text='Add Location',
+        self.add_location_button = tkinter.Button(self.instruction_add_location, text='Add Location',
                                                   command=self.adding_location)
-        self.save_button = tkinter.Button(self.bottom_frame, text='Save & Quit',
+        self.add_location_button.grid(row=1, column=0, sticky='E', padx=5, pady=2)
+
+        self.save_button = tkinter.Button(self.instruction_add_location, text='Save & Quit',
                                           command=self.root_add_location.destroy)
+        self.save_button.grid(row=1, column=2, sticky='W', padx=5, pady=2)
 
-        # Pack buttons
-        self.add_location_button.pack(side='left')
-        self.save_button.pack(side='left')
-
-        # Pack Frames
-        self.top_frame.pack()
-        self.mid_frame.pack()
-        self.bottom_frame.pack()
 
     def delete_location(self):
         items = self.locationList.curselection()
@@ -123,7 +124,6 @@ class MyGUI:
         self.scrollbar2.pack(side="right", fill="y")
 
         self.speciesList = tkinter.Listbox(self.leftFrame1, yscrollcommand=self.scrollbar2.set)
-        self.speciesList.insert("end", species_list)
         self.speciesList.pack(side="left", fill="y")
         self.scrollbar2.config(command=self.speciesList.yview)
 
@@ -139,6 +139,14 @@ class MyGUI:
         self.delete_species_button = tkinter.Button(self.speciesFrame, text="Delete Species",
                                                     command=self.delete_species_name)
         self.delete_species_button.grid(row=2, column=32, sticky='W', padx=5, pady=2)
+
+        self.instruction_select = tkinter.LabelFrame(self.root_select, text="Instructions")
+        self.instruction_select.grid(row=5, column=15, columnspan=15, sticky='NE', rowspan=3, padx=5, pady=5,
+                              ipadx=8, ipady=40)
+
+        self.species_instruction = tkinter.Label(self.instruction_select,
+                                                 text="Double click on location to open new window.")
+        self.species_instruction.grid(row=6, column=0, padx=5, pady=2)
 
         self.speciesList.bind('<Double-1>', self.get_species)
 
@@ -158,11 +166,11 @@ class MyGUI:
         self.dataFrame.grid(row=0, column=15, columnspan=15, sticky="NW",
                             rowspan=10, padx=5, pady=5, ipadx=25, ipady=50)
 
-        self.add_data_btn = tkinter.Button(self.dataFrame, text="Select Species Data",
+        self.add_data_btn = tkinter.Button(self.dataFrame, text="Add Species Data",
                                            command=self.adding_species_data)
         self.add_data_btn.grid(row=2, column=16, sticky='W', padx=5, pady=2)
 
-        self.graphing_btn = tkinter.Button(self.dataFrame, text="Select Species Graphing",
+        self.graphing_btn = tkinter.Button(self.dataFrame, text="View Species Graphing",
                                            command=self.graphing)
         self.graphing_btn.grid(row=4, column=16, sticky='W', padx=5, pady=2)
 
@@ -206,31 +214,25 @@ class MyGUI:
         self.root_add_species_name = tkinter.Tk()
         self.root_add_species_name.wm_title("Add Species Name Into Database")
 
-        # Create frames
-        self.top_frame_name = tkinter.Frame(self.root_add_species_name)
-        self.bottom_frame_name = tkinter.Frame(self.root_add_species_name)
+        self.instruction_add_name = tkinter.LabelFrame(self.root_add_species_name, text="Adding Species Name")
+        self.instruction_add_name.grid(row=0, columnspan=20, sticky='NW',
+                                           rowspan=10, padx=5, pady=5, ipadx=10, ipady=4)
 
         # Create Label for Species Name
-        self.label_species_name = tkinter.Label(self.top_frame_name, text='Enter Species Name: ')
-        self.species_name_entry = tkinter.Entry(self.top_frame_name, width=15)
+        self.label_species_name = tkinter.Label(self.instruction_add_name, text='Enter Species Name: ')
+        self.label_species_name.grid(row=0, column=0)
 
-        # Create pack and side for Label name
-        self.label_species_name.pack(side='left')
-        self.species_name_entry.pack(side='left')
+        self.species_name_entry = tkinter.Entry(self.instruction_add_name, width=20)
+        self.species_name_entry.grid(row=0, column=2, sticky='W')
 
         # Buttons
-        self.add_name_button = tkinter.Button(self.bottom_frame_name, text='Add Name',
+        self.add_name_button = tkinter.Button(self.instruction_add_name, text='Add Name',
                                               command=self.adding_name)
-        self.save_name_button = tkinter.Button(self.bottom_frame_name, text='Save & Quit',
+        self.add_name_button.grid(row=1, column=0, sticky='E', padx=5, pady=2)
+
+        self.save_name_button = tkinter.Button(self.instruction_add_name, text='Save & Quit',
                                                command=self.root_add_species_name.destroy)
-
-        # Pack buttons
-        self.add_name_button.pack(side='left')
-        self.save_name_button.pack(side='left')
-
-        # Pack for frames
-        self.top_frame_name.pack()
-        self.bottom_frame_name.pack()
+        self.save_name_button.grid(row=1, column=2, sticky='W', padx=5, pady=2)
 
     def adding_name(self):
 
@@ -259,47 +261,37 @@ class MyGUI:
         self.root_add_species_data = tkinter.Tk()
         self.root_add_species_data.wm_title("Add Species Data Into Database")
 
-        # Create frames
-        self.top_frame2 = tkinter.Frame(self.root_add_species_data)
-        self.mid_frame2 = tkinter.Frame(self.root_add_species_data)
-        self.bottom_frame2 = tkinter.Frame(self.root_add_species_data)
-        self.last_frame2 = tkinter.Frame(self.root_add_species_data)
+        self.instruction_add_data = tkinter.LabelFrame(self.root_add_species_data, text="Adding Species Data")
+        self.instruction_add_data.grid(row=0, columnspan=20, sticky='NW',
+                                       rowspan=10, padx=5, pady=5, ipadx=10, ipady=4)
 
         # Create Label
-        self.label_date = tkinter.Label(self.top_frame2, text='Enter Date: ')
-        self.date_entry = tkinter.Entry(self.top_frame2, width=15)
+        self.label_date = tkinter.Label(self.instruction_add_data, text='Enter Date: ')
+        self.label_date.grid(row=0, column=0)
 
-        self.label_population_size = tkinter.Label(self.mid_frame2, text='Enter Population Size: ')
-        self.population_size_entry = tkinter.Entry(self.mid_frame2, width=15)
+        self.date_entry = tkinter.Entry(self.instruction_add_data, width=15)
+        self.date_entry.grid(row=0, column=2, sticky='W')
 
-        self.label_temperature = tkinter.Label(self.bottom_frame2, text='Enter Temperature by Ferenheight: ')
-        self.temperature_entry = tkinter.Entry(self.bottom_frame2, width=15)
+        self.label_population_size = tkinter.Label(self.instruction_add_data, text='Enter Population Size: ')
+        self.label_population_size.grid(row=1, column=0)
 
-        # Create pack and side
-        self.label_date.pack(side='left')
-        self.date_entry.pack(side='left')
+        self.population_size_entry = tkinter.Entry(self.instruction_add_data, width=15)
+        self.population_size_entry.grid(row=1, column=2, sticky='W')
 
-        self.label_population_size.pack(side='left')
-        self.population_size_entry.pack(side='left')
+        self.label_temperature = tkinter.Label(self.instruction_add_data, text='Enter Temperature by Ferenheight: ')
+        self.label_temperature.grid(row=2, column=0)
 
-        self.label_temperature.pack(side='left')
-        self.temperature_entry.pack(side='left')
+        self.temperature_entry = tkinter.Entry(self.instruction_add_data, width=15)
+        self.temperature_entry.grid(row=2, column=2, sticky='W')
 
         # Create button widgets for bottom frame
-        self.add_data_button = tkinter.Button(self.last_frame2, text='Add Data',
+        self.add_data_button = tkinter.Button(self.instruction_add_data, text='Add Data',
                                               command=self.add_data)
-        self.save_data_button = tkinter.Button(self.last_frame2, text='Save & Quit',
+        self.add_data_button.grid(row=3, column=0, sticky='E', padx=5, pady=2)
+
+        self.save_data_button = tkinter.Button(self.instruction_add_data, text='Save & Quit',
                                                command=self.root_add_species_data.destroy)
-
-        # Pack buttons
-        self.add_data_button.pack(side='left')
-        self.save_data_button.pack(side='left')
-
-        # Pack Frames
-        self.top_frame2.pack()
-        self.mid_frame2.pack()
-        self.bottom_frame2.pack()
-        self.last_frame2.pack()
+        self.save_data_button.grid(row=3, column=0, sticky='W', padx=5, pady=2)
 
     def add_data(self):
         date = self.date_entry.get()
