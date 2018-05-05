@@ -7,13 +7,6 @@ import database
 db = database.MarineDatabase()
 db.create_tables()
 
-species_list = []
-location_list = []
-
-date_list = []
-population_list = []
-temperature_list = []
-
 
 class MyGUI:
     def __init__(self):
@@ -301,9 +294,8 @@ class MyGUI:
         population_size = self.population_size_entry.get()
         temperature = self.temperature_entry.get()
 
-        date_list.append(date)
-        population_list.append(population_size)
-        temperature_list.append(temperature)
+        db.add_observation(date, self.current_location, self.current_animal,
+                           population_size, temperature)
 
         date_size = len(date)
         population_length = len(population_size)
