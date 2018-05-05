@@ -274,7 +274,7 @@ class MyGUI:
         self.population_size_entry = tkinter.Entry(self.instruction_add_data, width=15)
         self.population_size_entry.grid(row=1, column=2, sticky='W')
 
-        self.label_temperature = tkinter.Label(self.instruction_add_data, text='Enter Temperature by Ferenheight: ')
+        self.label_temperature = tkinter.Label(self.instruction_add_data, text='Enter Temperature by Fahrenheit: ')
         self.label_temperature.grid(row=2, column=0)
 
         self.temperature_entry = tkinter.Entry(self.instruction_add_data, width=15)
