@@ -1,9 +1,11 @@
 import tkinter
 import tkinter.messagebox
-
 import matplotlib.pyplot as plt
 
-#import sqlite3
+import database
+
+db = database.MarineDatabase()
+db.create_tables()
 
 species_list = []
 location_list = []
@@ -30,6 +32,8 @@ class MyGUI:
         self.locationList = tkinter.Listbox(self.firstFrame, yscrollcommand=self.scrollbar1.set)
         self.locationList.pack(side="left", fill="y")
         self.scrollbar1.config(command=self.locationList.yview)
+        for location in db.get_locations():
+            self.locationList.insert("end", location)
 
         # Right Side - Buttons
         self.useLocations = tkinter.LabelFrame(self.main_window, text=" Add/Delete/Select ")
@@ -52,6 +56,9 @@ class MyGUI:
         self.location_instruction.grid(row=6, column=0, padx=5, pady=2)
 
         self.locationList.bind('<Double-1>', self.get_location)
+
+        self.current_location = str()
+        self.current_animal = str()
 
         #Enter tkinter loop
         tkinter.mainloop()
@@ -112,6 +119,7 @@ class MyGUI:
 
     def select_location(self, selection):
         location_name = selection
+        self.current_location = location_name
 
         self.root_select = tkinter.Tk()
         self.root_select.wm_title(location_name)
@@ -126,6 +134,8 @@ class MyGUI:
         self.speciesList = tkinter.Listbox(self.leftFrame1, yscrollcommand=self.scrollbar2.set)
         self.speciesList.pack(side="left", fill="y")
         self.scrollbar2.config(command=self.speciesList.yview)
+        for animal in db.get_animals_from(location_name):
+            self.speciesList.insert("end", animal)
 
         # Right TopFrame - Add Species, Delete Species
         self.speciesFrame = tkinter.LabelFrame(self.root_select, text="Add/Delete Species")
@@ -157,6 +167,7 @@ class MyGUI:
 
     def selected_species(self, name):
         species_name = name
+        self.current_animal = species_name
 
         self.root_species = tkinter.Tk()
         self.root_species.wm_title(species_name)
@@ -311,12 +322,20 @@ class MyGUI:
         self.temperature_entry.delete(0, temperature_size)
 
     def graphing(self):
-        self.root_graphing = tkinter.Tk()
-        self.root_graphing.wm_title("Graphing")
+        obs = db.get_observations(self.current_animal, self.current_location)
+        x = obs[0]
+        y = obs[1]
 
-        plt.plot([1, 2, 3, 4])
-        plt.ylabel('some numbers')
+        if len(x) > 10:
+            plt.plot(x[0:9], y[0:9])
+        else:
+            plt.plot(x, y)
+        plt.ylabel("Number Seen")
+        plt.xlabel("Dates")
+        plt.title("{} at {}".format(self.current_animal, self.current_location))
         plt.show()
 
 
 my_gui = MyGUI()
+
+db.close()
