@@ -105,12 +105,9 @@ class MyGUI:
 
 
     def delete_location(self):
-        items = self.locationList.curselection()
-        pos = 0
-        for i in items:
-            idx = int(i) - pos
-            self.locationList.delete(idx, idx)
-            pos = pos + 1
+        index = self.locationList.curselection()
+        db.delete_location(self.locationList.get(index[0]))
+        self.locationList.delete(index[0])
 
     def get_location(self, event):
         index = self.locationList.curselection()
@@ -202,8 +199,7 @@ class MyGUI:
         location_name = self.location_name_entry.get()
 
         self.locationList.insert("end", location_name)
-
-        location_list.append(location_name)
+        db.add_location(location_name)
 
         name_size = len(location_name)
 

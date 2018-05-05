@@ -157,11 +157,11 @@ class MarineDatabase:
 
         self.curr.execute("""
             DELETE FROM observations
-            WHERE observations.location.id = ?
+            WHERE observations.location_id = ?
             """, (location_id,))
         self.curr.execute("""
             DELETE FROM animals
-            WHERE animals.location.id = ?
+            WHERE animals.location_id = ?
             """, (location_id,))
         self.curr.execute("""
             DELETE FROM locations
